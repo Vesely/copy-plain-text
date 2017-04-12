@@ -1,0 +1,17 @@
+{
+    "name" : "Copy plain text",
+    "identifier" : "cz.davidvesely.copy-plain-text",
+    "version" : "1.0.1",
+    "description" : "Copy plain text from text layers",
+    "author" : "David Veselý",
+    "authorEmail" : "jsem@davidvesely.cz",
+    "commands" : [
+    {
+      "script" : "copy-text.sketchscript",
+      "handler" : "copyText",
+      "shortcut" : "cmd shift c",
+      "name" : "Copy plain text",
+      "identifier" : "copy-plain-text"
+    }
+  ]
+}

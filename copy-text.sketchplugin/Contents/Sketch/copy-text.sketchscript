@@ -1,0 +1,93 @@
+// Copy pure text
+var clipboard = {
+  // store the pasetboard object
+  pasteBoard : null,
+ 
+  // save the pasteboard object
+  init : function()
+  {
+    this.pasteBoard = NSPasteboard.generalPasteboard();
+  },
+  // set the clipboard to the given text
+  set : function( text )
+  {
+    if( typeof text === 'undefined' ) return null;
+ 
+    if( !this.pasteBoard )
+      this.init();
+ 
+    this.pasteBoard.declareTypes_owner( [ NSPasteboardTypeString ], null );
+    this.pasteBoard.setString_forType( text, NSPasteboardTypeString );
+ 
+    return true;
+  },
+  // get text from the clipbaoard
+  get : function()
+  {
+    if( !this.pasteBoard )
+      this.init();
+ 
+    var text = this.pasteBoard.stringForType( NSPasteboardTypeString );
+    
+    return text.toString();
+  }
+};
+
+// Run
+var copyText = function(context) {
+	var selection = context.selection
+	var selectionCount = [selection count]
+	var doc = context.document
+	var result = '';
+	
+	if (selectionCount > 0) {
+	
+		for (var i=0; i<selectionCount; i++) {
+	    	var layer = selection[i];
+	    
+	   		var isTextLayer = [layer isKindOfClass:[MSTextLayer class]];
+
+	   		if(isTextLayer == 1) {
+		   		var copiedText = [layer stringValue];
+		   		
+		   		result = copiedText+"\n"+result;
+
+		    	[doc showMessage: "Successfully copied."];
+	   		}else{
+	   			var isGroup = [layer isKindOfClass:[MSLayerGroup class]];
+
+	   			if(isGroup) {
+					var children = layer.children();
+					var successfullyCopied = false;
+
+					for ( var i = 0; i < children.length; i++ ){
+						var child = children[i];
+						var isTextLayer = [child isKindOfClass:[MSTextLayer class]];
+						if (isTextLayer){
+							var copiedText = [child stringValue] + "\n";
+							result = copiedText + result;
+							successfullyCopied = true;
+						}
+					}
+					if(successfullyCopied) {
+						[doc showMessage: "Successfully copied."];
+					}else{
+						[doc showMessage: "Selected group does not have text layer."];
+					}
+	   			}else{
+	   				[doc showMessage: "Error: You must select group or text layer."];
+	   			}
+	   		}
+		}
+		if(result[result.length -1 ] == "\n") {
+			result = result.slice(0, -1);
+		}
+		if(result[0] == "\n") {
+			result = result.substring(1);
+		}
+		clipboard.set(result);
+	} else {
+	  // No layer selected
+	  [doc showMessage: "Error: You must select group or text layer."];
+	}
+}

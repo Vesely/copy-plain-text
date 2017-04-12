@@ -1,0 +1,5 @@
+{
+    "name": "Copy plain text",
+    "description": "Sketch plugin to copy plain text from layers or groups. ",
+    "tags": ["copy", "text" , "export", "layers"]
+}
